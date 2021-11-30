@@ -7,7 +7,7 @@ router.get('/', (req, res) => {
     User.findAll({
         attributes: { exclude: ['password'] }
       })
-        .then(dbUserData => res.json(dbUserData))
+      .then(dbUserData => res.json(dbUserData))
         .catch(err => {
           console.log(err);
           res.status(500).json(err);
@@ -15,7 +15,7 @@ router.get('/', (req, res) => {
 });
 
 // GET /api/users/1 // only returns one user based on its req.params.id value
-router.get('./:id', (req, res) => {
+router.get('/:id', (req, res) => {
     // passing an argument into the .findOne() method
     User.findOne({
         attributes: { exclude: ['password'] },

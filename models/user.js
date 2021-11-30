@@ -1,5 +1,6 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection');
+const bcrypt = require('bcrypt');
 
 // create our User model
 class User extends Model {}
@@ -30,9 +31,9 @@ User.init(
         // there cannot be any duplicate email; values in this table
         unique: true,
         // if allowNull is set to false, we can run our data through validators before creating the table
-        validate: {
-            isEmail: true
-        }
+        // validate: {
+        //     isEmail: true
+        // }
     },
     // define a password column
     password: {
@@ -42,14 +43,27 @@ User.init(
             // this means the password must be at least four characters long
             len: [4]
         }
-    }
+        }
     },
     {
-      sequelize,
-      timestamps: false,
-      freezeTableName: true,
-      underscored: true,
-      modelName: 'user'  
-    }
+        hooks: {
+            //use the beforeCreate() hook to execute the bcrypt hash function on the plaintext password
+            // set up beforeCreate lifecycle "hook" functionality
+            // in the bcrypt hash function is passed into userData object that contains the plaintext password in the password property 
+            beforeCreate(userData) {
+                
+                // return statement then exits out of the function, returning the hashed password in the newUserData function // saltRound value of 10
+                return bcrypt.hash(userData.password, 10).then(newUserData => {
+                    return newUserData
+                });
+            }
+        },
+        sequelize,
+        timestamps: false,
+        freezeTableName: true,
+        underscored: true,
+        modelName: 'user'
+      }
+    
 );
 module.exports = User;
