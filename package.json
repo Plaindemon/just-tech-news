@@ -4,7 +4,9 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "node server.js"
+    "test": "jest",
+    "start": "node server.js",
+    "seeds": "node seeds/index.js"
   },
   "repository": {
     "type": "git",
@@ -22,5 +24,8 @@
     "express": "^4.17.1",
     "mysql2": "^2.3.3",
     "sequelize": "^6.12.0-alpha.1"
+  },
+  "devDependencies": {
+    "jest": "^25.5.4"
   }
 }
