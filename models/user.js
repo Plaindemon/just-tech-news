@@ -50,12 +50,15 @@ User.init(
             //use the beforeCreate() hook to execute the bcrypt hash function on the plaintext password
             // set up beforeCreate lifecycle "hook" functionality
             // in the bcrypt hash function is passed into userData object that contains the plaintext password in the password property 
-            beforeCreate(userData) {
-                
-                // return statement then exits out of the function, returning the hashed password in the newUserData function // saltRound value of 10
-                return bcrypt.hash(userData.password, 10).then(newUserData => {
-                    return newUserData
-                });
+            // set up beforeCreate lifecycle "hook" functionality
+            async beforeCreate(newUserData) {
+                newUserData.password = await bcrypt.hash(newUserData.password, 10);
+                return newUserData;
+            },
+            // set up beforeUpdate lifecycle "hook" functionality
+            async beforeUpdate(updatedUserData) {
+                updatedUserData.password = await bcrypt.hash(updatedUserData.password, 10);
+                return updatedUserData;
             }
         },
         sequelize,
