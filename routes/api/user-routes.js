@@ -52,6 +52,35 @@ router.post('/', (req, res) => {
     });
 });
 
+router.post('/login', (req, res) => {
+    // Query operation
+    // expects {email: 'lernantino@gmail.com', password: 'password1234'}
+    //queried the User table using the findOne() method for the email entered by the user and assigned it to req.body.email
+    User.findOne({
+        where: {
+            email: req.body.email
+        }
+    })
+    .then(dbUserData => {
+        // if user with that email was not found then -->
+        if(!dbUserData) {
+            // then an error message is sent back to the user
+            res.status(400).json({ message: 'No user with that email address!'});
+            return;
+        }
+        // if email is found 
+        // res.json({ user: dbUserData });
+
+        // Verify user
+        const validPassword = dbUserData.checkPassword(req.body.password);
+            if (!validPassword) {
+            res.status(400).json({ message: 'Incorrect password!' });
+            return;
+            }
+        res.json({ user: dbUserData, message: 'You are now logged in!' });
+    });
+  });
+
 // PUT /api/users
 router.put('/:id', (req, res) => {
     //expects {username: 'Lernantino', email: 'plain@email.com', password: 'password'}
