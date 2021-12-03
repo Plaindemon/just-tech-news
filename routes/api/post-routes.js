@@ -5,19 +5,15 @@ const { Post, User } = require('../../models');
 router.get('/', (req, res) => {
     console.log('===================');
     Post.findAll({
-        // Query configuration by customizing the attributes property
-        attributes: [ 'id', 'post_url', 'title', 'created_at'],
-        // JOIN to the User table using include 
+        attributes: ['id', 'post_url', 'title', 'created_at'],
+        order: [['created_at', 'DESC']], 
         include: [
-            // expressed as an array of objects
-            {
-                // reference model and attributes
-                model: User,
-                attributes: ['username']
-            }
+          {
+            model: User,
+            attributes: ['username']
+          }
         ]
-
-    })
+      })
     // .then
     .then(dbPostData => res.json(dbPostData))
     .catch(err => {
@@ -54,5 +50,65 @@ router.get('/:id', (req, res) => {
             res.status(500).json(err);
         });
 });
+
+router.post('/', (req, res) => {
+    // expects {title: 'Taskmaster goes public!}, post_url: 'https://taskmaster.com/press', user_id: 1}
+    Post.create({
+        //  using req.body to populate the columns in the post table
+        title: req.body.post_url,
+        user_id: req.body.user_id
+    })
+    .then(dbPostData => res.json(dbPostData))
+    .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+    });
+});
+
+//  request parameter to find the post
+router.put('/:id', (req, res) => {
+    Post.update(
+        //then used the req.body.title value to replace the title of the post
+        {
+            title: req.body.title
+        },
+        {
+            where: {
+                id: req.params.id
+            }
+        }
+    )
+    .then(dbPostData => {
+            if(!dbPostData) {
+                res.status(404).json({ message: 'No post found with this id'});
+                return;
+            }
+            res.json(dbPostData);
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json(err);
+        });
+});
+
+router.delete('/:id', (req, res) => {
+    Post.destroy({
+      where: {
+        id: req.params.id
+      }
+    })
+      .then(dbPostData => {
+        if (!dbPostData) {
+          res.status(404).json({ message: 'No post found with this id' });
+          return;
+        }
+        res.json(dbPostData);
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+      });
+  });
+
 
 module.exports = router;
