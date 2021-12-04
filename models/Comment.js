@@ -28,16 +28,11 @@ Comment.init(
         }
       },
       comment_text: {
-          type: DataTypes.INTEGER,
-          allowNull: false,
-            references: {
-            model: 'comment',
-            key: 'text'
-            },
-            validate: {
-                // this means the password must be at least four characters long
-                len: [4]
-            }
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          len: [1]
+        }
       },
     },
     {

@@ -1,6 +1,5 @@
 const router = require('express').Router();
-const { User, Post, Vote } = require("../../models");
-
+const { User, Post, Comment, Vote } = require('../../models');
 // GET /api/users // get request selects all users from a database and sends it back as JSON
 router.get('/', (req, res) => {
     // Access our User model and run .findAll() method // User model inherits functionality from Model class // .findAll() method lets us query all of the users from the user table 
@@ -28,12 +27,12 @@ router.get('/:id', (req, res) => {
               attributes: ['id', 'title', 'post_url', 'created_at']
             },
             {
-                model: Comment,
-                attributes: ['id', 'comment_text', 'created_at'],
-                include: {
-                  model: Post,
-                  attributes: ['title']
-                }
+              model: Comment,
+              attributes: ['id', 'comment_text', 'created_at'],
+              include: {
+                model: Post,
+                attributes: ['title']
+              }
             },
             {
               model: Post,

@@ -18,7 +18,8 @@ Post.belongsTo(User, {
 // allowing both the User and Post models to query each other's information in the context of a vote
 User.belongsToMany(Post, {
     through: Vote,
-    as: 'voted_posts',foreignKey: 'user_id'
+    as: 'voted_posts',
+    foreignKey: 'user_id'
 });
 
 //
