@@ -11,7 +11,7 @@ app.use(express.urlencoded({ extended: true }));
 // turn on routes
 app.use(routes);
 
-// turn on connection to db and server // sequelize.sync() method to establish the connection to the database
-sequelize.sync({ force: false }).then(() => {
-    app.listen(PORT, () => console.log('Now Listening'));
-});
+// turn on connection to db and server // sequelize.sync() method to establish the connection to the database // force: true will drop the tables and recreate them while force: false won't drop the tables
+sequelize.sync({ force: true }).then(() => {
+    app.listen(PORT, () => console.log('Now listening'));
+  });

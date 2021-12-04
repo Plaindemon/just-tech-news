@@ -1,6 +1,7 @@
 const { Model, DataTypes } = require('sequelize');
-const sequelize = require('../config/connection');
 const bcrypt = require('bcrypt');
+const sequelize = require('../config/connection');
+
 
 // create our User model
 class User extends Model {
@@ -37,9 +38,9 @@ User.init(
         // there cannot be any duplicate email; values in this table
         unique: true,
         // if allowNull is set to false, we can run our data through validators before creating the table
-        // validate: {
-        //     isEmail: true
-        // }
+        validate: {
+            isEmail: true
+        }
     },
     // define a password column
     password: {
